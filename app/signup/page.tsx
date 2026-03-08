@@ -1,5 +1,5 @@
 "use client";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { supabase } from "@/lib/supabase";
 import { useRouter } from "next/navigation";
 
@@ -39,7 +39,18 @@ function Page() {
       router.push("/dashboard");
     }
   };
-
+  //checking if user is already logged in
+    useEffect(()=>{
+      const checkSession = async () => {
+        const { data } = await supabase.auth.getSession();
+  
+        if (data.session) {
+          router.replace("/dashboard");
+          return; // ❗ STOP execution
+        }
+      }
+      checkSession();
+    }, [router]);
   return (
     <div className="min-h-screen bg-[#0B0F1A] flex items-center justify-center px-6">
       <div className="w-full max-w-md">
